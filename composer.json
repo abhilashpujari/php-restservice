@@ -2,6 +2,7 @@
     "name": "abhilashpujari/php-restservice",
     "description" : "Simple PHP Wrapper class for making REST API calls",
     "type": "library",
+    "keywords": ["http", "rest", "php", "curl", "client", "HTTP client"],
     "license": "MIT",
     "authors": [
         {
@@ -17,6 +18,11 @@
     "autoload": {
         "psr-0":{
             "RestService": ["src/"]
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
         }
     }
 }
