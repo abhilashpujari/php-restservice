@@ -1,0 +1,22 @@
+{
+    "name": "abhilash/php-restservice",
+    "description" : "Simple PHP Wrapper class for making REST API calls",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Abhilash Pujari",
+            "email": "abhilashpujari11@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">= 5.4",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-0":{
+            "RestService": ["src/"]
+        }
+    }
+}
