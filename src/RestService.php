@@ -221,6 +221,13 @@ class RestService
         }
     }
 
+    /**
+     * @param $method
+     * @param $uri
+     * @param array $options
+     * @return bool
+     * @throws SocketException
+     */
     protected function fire($method, $uri, array $options = [])
     {
         $uri = new Uri($uri);
