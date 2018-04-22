@@ -81,10 +81,12 @@ class RestService
 
     /**
      * @param $endpoint
+     * @return RestService
      */
     public function setEndpoint($endpoint)
     {
         $this->apiEndpoint = $endpoint;
+        return $this;
     }
 
     /**
