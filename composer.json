@@ -1,5 +1,5 @@
 {
-    "name": "abhilash/php-restservice",
+    "name": "abhilashpujari/php-restservice",
     "description" : "Simple PHP Wrapper class for making REST API calls",
     "type": "library",
     "license": "MIT",
