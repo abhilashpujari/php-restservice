@@ -4,6 +4,7 @@ namespace RestService;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request as PsrRequest;
 use GuzzleHttp\Psr7\Uri;
 use RestService\Exceptions\SocketException;
@@ -218,6 +219,8 @@ class RestService
             $response = $this->guzzle->request($method, $uri, $options);
             $this->resetRequest();
             return $response;
+        } catch (ClientException $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
@@ -258,6 +261,8 @@ class RestService
 
         fwrite($socket, \GuzzleHttp\Psr7\str($socketRequest));
         fclose($socket);
+
+        $this->resetRequest();
         return true;
     }
 
