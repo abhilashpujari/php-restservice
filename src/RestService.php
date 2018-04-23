@@ -212,6 +212,30 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
+     * @return bool|mixed|\Psr\Http\Message\ResponseInterface
+     * @throws Exception
+     * @throws SocketException
+     */
+    public function patch($uri, $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    {
+        $uri = $this->apiEndpoint . $uri;
+        $options = [
+            'headers' => ((empty($headers)) ? $this->getRequestHeaders() : $headers),
+            'json' => $params
+        ];
+
+        if ($this->isFireAndForget) {
+            return $this->fire('PATCH', $uri, $options);
+        } else {
+            return $this->send('PATCH', $uri, $options, $returnResponseBodyOnly);
+        }
+    }
+
+    /**
+     * @param $uri
+     * @param array $params
+     * @param array $headers
+     * @param bool|true $returnResponseBodyOnly
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      */
