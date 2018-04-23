@@ -4,8 +4,10 @@ namespace RestService;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request as PsrRequest;
+use GuzzleHttp\Psr7\Response as PsrResponse;
 use GuzzleHttp\Psr7\Uri;
 use RestService\Exceptions\SocketException;
 
@@ -13,13 +15,13 @@ use RestService\Exceptions\SocketException;
  * Class RestService
  * @package RestService
  */
-class RestService 
+class RestService
 {
     /**
      * @var string
      */
     protected $accept;
-    
+
     /**
      * @var string
      */
@@ -29,7 +31,7 @@ class RestService
      * @var int
      */
     protected $connectionTimeout;
-    
+
     /**
      * @var Client
      */
@@ -44,7 +46,7 @@ class RestService
      * @var array
      */
     protected $options;
-    
+
     /**
      * @var array
      */
@@ -95,21 +97,39 @@ class RestService
      * @param int $connectionTimeout
      * @return RestService
      */
-     public function setIsFireAndForget($isFireAndForget, $connectionTimeout = 5)
-     {
-         $this->isFireAndForget = (bool)$isFireAndForget;
-         $this->connectionTimeout = $connectionTimeout;
-         return $this;
-     }
+    public function setIsFireAndForget($isFireAndForget, $connectionTimeout = 5)
+    {
+        $this->isFireAndForget = (bool)$isFireAndForget;
+        $this->connectionTimeout = $connectionTimeout;
+        return $this;
+    }
+
+    /**
+     * @param PsrResponse $response
+     * @return mixed|string
+     */
+    public function getResponseBody(PsrResponse $response)
+    {
+        if (!empty($response->getHeader('Content-Type')) && stristr($response->getHeader('Content-Type')[0],
+                'application/json')
+        ) {
+            return json_decode(
+                $response->getBody()
+            );
+        } else {
+            return $response->getBody()->__toString();
+        }
+    }
 
     /**
      * @param $uri
      * @param array $params
      * @param array $headers
+     * @param bool|true $returnResponseBodyOnly
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      */
-    public function head($uri, array $params = [], array $headers = [])
+    public function head($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -117,17 +137,18 @@ class RestService
             'query' => $params
         ];
 
-        return $this->send('HEAD', $uri, $options);
+        return $this->send('HEAD', $uri, $options, $returnResponseBodyOnly);
     }
 
     /**
      * @param $uri
      * @param array $params
      * @param array $headers
+     * @param bool|true $returnResponseBodyOnly
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      */
-    public function get($uri, array $params = [], array $headers = [])
+    public function get($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -135,18 +156,19 @@ class RestService
             'query' => $params
         ];
 
-        return $this->send('GET', $uri, $options);
+        return $this->send('GET', $uri, $options, $returnResponseBodyOnly);
     }
 
     /**
      * @param $uri
      * @param array $params
      * @param array $headers
+     * @param bool|true $returnResponseBodyOnly
      * @return bool|mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      * @throws SocketException
      */
-    public function post($uri, $params = [], array $headers = [])
+    public function post($uri, $params = [], array $headers = [], $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -157,7 +179,7 @@ class RestService
         if ($this->isFireAndForget) {
             return $this->fire('POST', $uri, $options);
         } else {
-            return $this->send('POST', $uri, $options);
+            return $this->send('POST', $uri, $options, $returnResponseBodyOnly);
         }
     }
 
@@ -165,11 +187,12 @@ class RestService
      * @param $uri
      * @param array $params
      * @param array $headers
+     * @param bool|true $returnResponseBodyOnly
      * @return bool|mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      * @throws SocketException
      */
-    public function put($uri, $params = [], array $headers = [])
+    public function put($uri, $params = [], array $headers = [], $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -180,7 +203,7 @@ class RestService
         if ($this->isFireAndForget) {
             return $this->fire('PUT', $uri, $options);
         } else {
-            return $this->send('PUT', $uri, $options);
+            return $this->send('PUT', $uri, $options, $returnResponseBodyOnly);
         }
     }
 
@@ -188,10 +211,11 @@ class RestService
      * @param $uri
      * @param array $params
      * @param array $headers
+     * @param bool|true $returnResponseBodyOnly
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      */
-    public function delete($uri, array $params = [], array $headers = [])
+    public function delete($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -199,17 +223,18 @@ class RestService
             'query' => $params
         ];
 
-        return $this->send('DELETE', $uri, $options);
+        return $this->send('DELETE', $uri, $options, $returnResponseBodyOnly);
     }
 
     /**
-     * @param $uri
      * @param $method
+     * @param $uri
      * @param array $options
+     * @param bool|true $returnResponseBodyOnly
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      */
-    protected function send($uri, $method, $options = [])
+    protected function send($method, $uri, $options = [], $returnResponseBodyOnly = true)
     {
         if (is_null($this->apiEndpoint)) {
             throw new Exception("Invalid null endpoint");
@@ -218,9 +243,11 @@ class RestService
         try {
             $response = $this->guzzle->request($method, $uri, $options);
             $this->resetRequest();
-            return $response;
+            return ($returnResponseBodyOnly) ? $this->getResponseBody($response) : $response;
         } catch (ClientException $e) {
-            throw new Exception($e->getMessage(), $e->getCode());
+            throw new Exception($e->getResponse()->getReasonPhrase(), $e->getResponse()->getStatusCode());
+        } catch (BadResponseException $e) {
+            throw new Exception($e->getResponse()->getReasonPhrase(), $e->getResponse()->getStatusCode());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
