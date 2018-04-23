@@ -1,6 +1,7 @@
 PHP HTTP REST Client
 =======================
-Simple PHP Client library that makes it easy to make REST API calls
+Simple PHP Client library that makes it easy to make REST API calls.
+It uses [Guzzle Client](http://docs.guzzlephp.org/en/stable/) as a dependencies
 
 ## Installation
 
@@ -29,3 +30,71 @@ You can then later update this library using composer:
  ```bash
 composer.phar update
  ```
+
+ ## Usage
+
+1 GET Request
+ ```php
+ use RestService\RestService;
+
+ $restService = new RestService();
+ $response = $restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->get('/posts/1');
+ ```
+
+2 POST Request
+```php
+$restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->post('/posts');
+```
+
+3 PUT Request
+```php
+$restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->put('/posts/1',
+         [
+             'id' => 1,
+             'text' => 'Test'
+         ]
+     );
+```
+
+4 DELETE Request
+```php
+$restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->delete('/posts/1');
+```
+
+5 A fire and forget request which is useful in scenario where we fire the request and aren't
+concerned of the response, it can be done by setting setIsFireAndForget(true)
+```php
+$restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->setIsFireAndForget(true)
+     ->post('/posts');
+```
+
+6 Request with some custom headers, , it can be done by setting setRequestHeaders(headers array)
+```php
+$restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->setRequestHeaders([
+         'auth' => 'somevalue'
+     ])
+     ->post('/posts');
+```
+
+7 Request in which we request the response data which includes status code, headers, body etc,
+which can be done by setting request method 4th parameter to false
+```php
+$response = $restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->get('/posts/1', [], [], false);
+
+ var_dump($response->getHeaders());
+ var_dump($response->getBody());
+```
