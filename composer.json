@@ -16,8 +16,8 @@
         "guzzlehttp/guzzle": "^6.3"
     },
     "autoload": {
-        "psr-0":{
-            "RestService": ["src/"]
+        "psr-4": {
+            "RestService\\": "src/"
         }
     },
     "extra": {
