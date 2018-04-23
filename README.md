@@ -62,14 +62,26 @@ $restService
      );
 ```
 
-4 DELETE Request
+4 PATCH Request
+```php
+$restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->patch('/posts/1',
+         [
+             'id' => 1,
+             'text' => 'Test'
+         ]
+     );
+```
+
+5 DELETE Request
 ```php
 $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
      ->delete('/posts/1');
 ```
 
-5 A fire and forget request which is useful in scenario where we fire the request and aren't
+6 A fire and forget request which is useful in scenario where we fire the request and aren't
 concerned of the response, it can be done by setting setIsFireAndForget(true)
 ```php
 $restService
@@ -78,7 +90,7 @@ $restService
      ->post('/posts');
 ```
 
-6 Request with some custom headers, , it can be done by setting setRequestHeaders(headers array)
+7 Request with some custom headers, , it can be done by setting setRequestHeaders(headers array)
 ```php
 $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
@@ -88,7 +100,7 @@ $restService
      ->post('/posts');
 ```
 
-7 Request in which we request the response data which includes status code, headers, body etc,
+8 Request in which we request the response data which includes status code, headers, body etc,
 which can be done by setting request method 4th parameter to false
 ```php
 $response = $restService
