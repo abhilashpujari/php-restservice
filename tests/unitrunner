@@ -1,0 +1,3 @@
+#! /bin/sh
+
+../vendor/phpunit/phpunit/phpunit $2 --configuration phpunit.xml $1
