@@ -34,6 +34,7 @@ composer.phar update
  ## Usage
 
 1 GET Request
+
  ```php
  use RestService\RestService;
 
@@ -44,6 +45,7 @@ composer.phar update
  ```
 
 2 POST Request
+
 ```php
 $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
@@ -63,6 +65,7 @@ $restService
 ```
 
 4 PATCH Request
+
 ```php
 $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
@@ -75,6 +78,7 @@ $restService
 ```
 
 5 DELETE Request
+
 ```php
 $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
@@ -83,6 +87,7 @@ $restService
 
 6 A fire and forget request which is useful in scenario where we fire the request and aren't
 concerned of the response, it can be done by setting setIsFireAndForget(true)
+
 ```php
 $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
@@ -91,6 +96,7 @@ $restService
 ```
 
 7 Request with some custom headers, , it can be done by setting setRequestHeaders(headers array)
+
 ```php
 $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
@@ -102,6 +108,7 @@ $restService
 
 8 Request in which we request the response data which includes status code, headers, body etc,
 which can be done by setting request method 4th parameter to false
+
 ```php
 $response = $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
