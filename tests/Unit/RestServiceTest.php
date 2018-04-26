@@ -49,8 +49,9 @@ class RestServiceTest extends TestCase
         $response = $restService
             ->setEndpoint($this->endpoint)
             ->get('/posts', [], [], false);
-
+        
         $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Bar', $response->getHeader('X-Foo')[0]);
     }
 
     public function testCanCreatePostRequest()
