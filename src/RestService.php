@@ -324,7 +324,10 @@ class RestService
     public function resetRequest()
     {
         $this->accept = 'application/json';
-        $this->guzzle = new Client();
+        $this->guzzle = new Client(['defaults' => [
+            'verify' => false
+        ]]);
+
         $this->apiEndpoint = null;
         $this->connectionTimeout = 5;
         $this->isFireAndForget = false;
