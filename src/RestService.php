@@ -52,8 +52,12 @@ class RestService
      */
     protected $requestHeaders = [];
 
-    public function __construct()
+    /**
+     * @param array $options
+     */
+    public function __construct($options = [])
     {
+        $this->guzzle = new Client($options);
         $this->resetRequest();
     }
 
@@ -324,10 +328,6 @@ class RestService
     public function resetRequest()
     {
         $this->accept = 'application/json';
-        $this->guzzle = new Client(['defaults' => [
-            'verify' => false
-        ]]);
-
         $this->apiEndpoint = null;
         $this->connectionTimeout = 5;
         $this->isFireAndForget = false;

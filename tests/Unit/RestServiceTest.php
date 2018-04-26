@@ -1,6 +1,9 @@
 <?php
 namespace RestService\Tests;
 
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use RestService\RestService;
 
@@ -18,8 +21,7 @@ class RestServiceTest extends TestCase
 
     protected function setUp()
     {
-        $this->restService = new RestService();
-        $this->endpoint = 'https://jsonplaceholder.typicode.com';
+        $this->endpoint = 'https://test.com';
     }
 
     /**
@@ -28,12 +30,23 @@ class RestServiceTest extends TestCase
      */
     public function testNullEndpointThrowsException()
     {
-        $this->restService->get('/posts');
+        $mock = new MockHandler();
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
+        $restService->get('/posts');
     }
 
     public function testCanCreateGetRequest()
     {
-        $response = $this->restService
+        $mock = new MockHandler([
+            new Response(200, ['X-Foo' => 'Bar'])
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
+        $response = $restService
             ->setEndpoint($this->endpoint)
             ->get('/posts', [], [], false);
 
@@ -42,47 +55,75 @@ class RestServiceTest extends TestCase
 
     public function testCanCreatePostRequest()
     {
-        $response = $this->restService
+        $mock = new MockHandler([
+            new Response(200)
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
+        $response = $restService
             ->setEndpoint($this->endpoint)
             ->post('/posts', [], [], false);
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testCanCreatePutRequest()
     {
+        $mock = new MockHandler([
+            new Response(201)
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
         $requestData = [
             "id" => 1,
             "value" => 'test'
         ];
 
-        $response = $this->restService
+        $response = $restService
             ->setEndpoint($this->endpoint)
             ->put('/posts/1', $requestData, [], false);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());
     }
 
     public function testCanCreatePatchRequest()
     {
+        $mock = new MockHandler([
+            new Response(201)
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
         $requestData = [
             "id" => 1,
             "value" => 'test'
         ];
 
-        $response = $this->restService
+        $response = $restService
             ->setEndpoint($this->endpoint)
             ->patch('/posts/1', $requestData, [], false);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());
     }
 
     public function testCanCreateDeleteRequest()
     {
-        $response = $this->restService
+        $mock = new MockHandler([
+            new Response(204)
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
+        $response = $restService
             ->setEndpoint($this->endpoint)
             ->delete('/posts/1', [], [], false);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(204, $response->getStatusCode());
     }
 }
