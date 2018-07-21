@@ -30,7 +30,7 @@ require 'vendor/autoload.php';
 You can then later update this library using composer:
 
  ```bash
-composer.phar update
+php composer.phar update
  ```
 
  ## Usage
