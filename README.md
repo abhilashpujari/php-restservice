@@ -16,7 +16,7 @@ curl -sS https://getcomposer.org/installer | php
 Next, run the Composer command to install the latest stable version of this library:
 
 ```bash
-php composer.phar require abhilashpujari/php-restservice
+php composer.phar require abhilashpujari/php-restservice dev-master
 ```
 
 After installing, you need to require Composer's autoloader:
