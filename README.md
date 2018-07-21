@@ -119,3 +119,14 @@ $response = $restService
  var_dump($response->getHeaders());
  var_dump($response->getBody());
 ```
+
+9 PURGE Request (Can be used for cache invalidation Eg:: varnish, nginx cache)
+
+ ```php
+ use RestService\RestService;
+
+ $restService = new RestService();
+ $response = $restService
+     ->setEndpoint('https://jsonplaceholder.typicode.com')
+     ->purge('/posts/1');
+ ```
