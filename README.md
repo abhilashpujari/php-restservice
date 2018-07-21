@@ -1,5 +1,7 @@
 PHP HTTP REST Client
 =======================
+[![Build Status](https://travis-ci.org/abhilashpujari/php-restservice.svg?branch=master)](https://travis-ci.org/abhilashpujari/php-restservice)
+
 Simple PHP Client library that makes it easy to make REST API calls.
 It uses [Guzzle Client](http://docs.guzzlephp.org/en/stable/) as a dependencies
 
