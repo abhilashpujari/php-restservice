@@ -133,7 +133,7 @@ class RestService
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      */
-    public function head($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function delete($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -141,7 +141,7 @@ class RestService
             'query' => $params
         ];
 
-        return $this->send('HEAD', $uri, $options, $returnResponseBodyOnly);
+        return $this->send('DELETE', $uri, $options, $returnResponseBodyOnly);
     }
 
     /**
@@ -161,6 +161,49 @@ class RestService
         ];
 
         return $this->send('GET', $uri, $options, $returnResponseBodyOnly);
+    }
+
+    /**
+     * @param $uri
+     * @param array $params
+     * @param array $headers
+     * @param bool|true $returnResponseBodyOnly
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws Exception
+     */
+    public function head($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    {
+        $uri = $this->apiEndpoint . $uri;
+        $options = [
+            'headers' => ((empty($headers)) ? $this->getRequestHeaders() : $headers),
+            'query' => $params
+        ];
+
+        return $this->send('HEAD', $uri, $options, $returnResponseBodyOnly);
+    }
+
+    /**
+     * @param $uri
+     * @param array $params
+     * @param array $headers
+     * @param bool|true $returnResponseBodyOnly
+     * @return bool|mixed|\Psr\Http\Message\ResponseInterface
+     * @throws Exception
+     * @throws SocketException
+     */
+    public function patch($uri, $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    {
+        $uri = $this->apiEndpoint . $uri;
+        $options = [
+            'headers' => ((empty($headers)) ? $this->getRequestHeaders() : $headers),
+            'json' => $params
+        ];
+
+        if ($this->isFireAndForget) {
+            return $this->fire('PATCH', $uri, $options);
+        } else {
+            return $this->send('PATCH', $uri, $options, $returnResponseBodyOnly);
+        }
     }
 
     /**
@@ -216,34 +259,10 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
-     * @return bool|mixed|\Psr\Http\Message\ResponseInterface
-     * @throws Exception
-     * @throws SocketException
-     */
-    public function patch($uri, $params = [], array $headers = [], $returnResponseBodyOnly = true)
-    {
-        $uri = $this->apiEndpoint . $uri;
-        $options = [
-            'headers' => ((empty($headers)) ? $this->getRequestHeaders() : $headers),
-            'json' => $params
-        ];
-
-        if ($this->isFireAndForget) {
-            return $this->fire('PATCH', $uri, $options);
-        } else {
-            return $this->send('PATCH', $uri, $options, $returnResponseBodyOnly);
-        }
-    }
-
-    /**
-     * @param $uri
-     * @param array $params
-     * @param array $headers
-     * @param bool|true $returnResponseBodyOnly
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws Exception
      */
-    public function delete($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function purge($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -251,7 +270,7 @@ class RestService
             'query' => $params
         ];
 
-        return $this->send('DELETE', $uri, $options, $returnResponseBodyOnly);
+        return $this->send('PURGE', $uri, $options, $returnResponseBodyOnly);
     }
 
     /**
