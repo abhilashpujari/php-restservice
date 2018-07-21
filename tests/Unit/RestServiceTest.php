@@ -127,4 +127,21 @@ class RestServiceTest extends TestCase
 
         $this->assertEquals(204, $response->getStatusCode());
     }
+
+    public function testCanCreatePurgeRequest()
+    {
+        $mock = new MockHandler([
+            new Response(200, ['X-Foo' => 'Bar'])
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
+        $response = $restService
+            ->setEndpoint($this->endpoint)
+            ->purge('/posts', [], [], false);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Bar', $response->getHeader('X-Foo')[0]);
+    }
 }
