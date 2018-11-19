@@ -130,14 +130,6 @@ $response = $restService
      ->setEndpoint('https://jsonplaceholder.typicode.com')
      ->purge('/posts/1');
  ```
- 
- ### Author
-
-Abhilash Pujari
-
-### Version
-
-1.0.0
 
 ### License
 
