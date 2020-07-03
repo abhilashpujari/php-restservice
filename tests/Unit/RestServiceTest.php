@@ -1,5 +1,5 @@
 <?php
-namespace RestService\Tests;
+namespace RestService\Tests\Unit;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -7,6 +7,10 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use RestService\RestService;
 
+/**
+ * Class RestServiceTest
+ * @package RestService\Tests\Unit
+ */
 class RestServiceTest extends TestCase
 {
     /**
@@ -19,17 +23,15 @@ class RestServiceTest extends TestCase
      */
     protected $endpoint;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->endpoint = 'https://test.com';
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Invalid null endpoint
-     */
     public function testNullEndpointThrowsException()
     {
+        $this->expectExceptionMessage("Invalid null endpoint");
+        $this->expectException(\Exception::class);
         $mock = new MockHandler();
         $handler = HandlerStack::create($mock);
 

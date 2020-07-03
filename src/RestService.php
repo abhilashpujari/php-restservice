@@ -7,9 +7,13 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request as PsrRequest;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Response as PsrResponse;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ResponseInterface;
 use RestService\Exceptions\SocketException;
+use function GuzzleHttp\Psr7\str;
 
 /**
  * Class RestService
@@ -97,11 +101,11 @@ class RestService
     }
 
     /**
-     * @param $isFireAndForget
+     * @param bool $isFireAndForget
      * @param int $connectionTimeout
-     * @return RestService
+     * @return $this
      */
-    public function setIsFireAndForget($isFireAndForget, $connectionTimeout = 5)
+    public function setIsFireAndForget($isFireAndForget = false, $connectionTimeout = 5)
     {
         $this->isFireAndForget = (bool)$isFireAndForget;
         $this->connectionTimeout = $connectionTimeout;
@@ -130,7 +134,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed|ResponseInterface
      * @throws Exception
      */
     public function delete($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
@@ -149,7 +153,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed|ResponseInterface
      * @throws Exception
      */
     public function get($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
@@ -168,7 +172,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed|ResponseInterface
      * @throws Exception
      */
     public function head($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
@@ -187,7 +191,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
-     * @return bool|mixed|\Psr\Http\Message\ResponseInterface
+     * @return bool|mixed|ResponseInterface
      * @throws Exception
      * @throws SocketException
      */
@@ -211,7 +215,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
-     * @return bool|mixed|\Psr\Http\Message\ResponseInterface
+     * @return bool|mixed|ResponseInterface
      * @throws Exception
      * @throws SocketException
      */
@@ -235,7 +239,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
-     * @return bool|mixed|\Psr\Http\Message\ResponseInterface
+     * @return bool|mixed|ResponseInterface
      * @throws Exception
      * @throws SocketException
      */
@@ -259,7 +263,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool|true $returnResponseBodyOnly
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed|ResponseInterface
      * @throws Exception
      */
     public function purge($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
@@ -278,7 +282,7 @@ class RestService
      * @param $uri
      * @param array $options
      * @param bool|true $returnResponseBodyOnly
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed|ResponseInterface
      * @throws Exception
      */
     protected function send($method, $uri, $options = [], $returnResponseBodyOnly = true)
@@ -288,6 +292,7 @@ class RestService
         }
 
         try {
+            /** @var Response $response */
             $response = $this->guzzle->request($method, $uri, $options);
             $this->resetRequest();
             return ($returnResponseBodyOnly) ? $this->getResponseBody($response) : $response;
@@ -311,7 +316,7 @@ class RestService
     {
         $uri = new Uri($uri);
 
-        /** @var $socketRequest PsrRequest */
+        /** @var MessageInterface $socketRequest */
         $socketRequest = new PsrRequest($method, $uri, $options['headers'], json_encode($options['json']));
         $socketRequest = $socketRequest
             ->withAddedHeader('Content-Type', 'application/json; charset=utf-8')
@@ -333,7 +338,7 @@ class RestService
             throw new SocketException($errstr, $errno);
         }
 
-        fwrite($socket, \GuzzleHttp\Psr7\str($socketRequest));
+        fwrite($socket, str($socketRequest));
         fclose($socket);
 
         $this->resetRequest();
