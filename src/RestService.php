@@ -283,6 +283,7 @@ class RestService
      * @param bool $returnResponseBodyOnly
      * @return PsrResponse|mixed|string
      * @throws GuzzleException
+     * @throws Exception
      */
     protected function send(string $method, string $uri, array $options = [], bool $returnResponseBodyOnly = true)
     {
