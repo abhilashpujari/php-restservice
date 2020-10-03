@@ -138,6 +138,7 @@ class RestService
      * @param bool $returnResponseBodyOnly
      * @return PsrResponse|mixed|ResponseInterface|string
      * @throws Exception
+     * @throws GuzzleException
      */
     public function delete(string $uri, array $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
@@ -157,6 +158,7 @@ class RestService
      * @param bool $returnResponseBodyOnly
      * @return PsrResponse|mixed|ResponseInterface|string
      * @throws Exception
+     * @throws GuzzleException
      */
     public function get(string $uri, array $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
@@ -176,6 +178,7 @@ class RestService
      * @param bool $returnResponseBodyOnly
      * @return PsrResponse|mixed|ResponseInterface|string
      * @throws Exception
+     * @throws GuzzleException
      */
     public function head(string $uri, array $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
@@ -195,6 +198,7 @@ class RestService
      * @param bool $returnResponseBodyOnly
      * @return bool|PsrResponse|mixed|ResponseInterface|string
      * @throws SocketException
+     * @throws GuzzleException
      */
     public function patch(string $uri, $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
@@ -218,6 +222,7 @@ class RestService
      * @param bool $returnResponseBodyOnly
      * @return bool|PsrResponse|mixed|ResponseInterface|string
      * @throws SocketException
+     * @throws GuzzleException
      */
     public function post(string $uri, $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
@@ -241,6 +246,7 @@ class RestService
      * @param bool $returnResponseBodyOnly
      * @return bool|PsrResponse|mixed|ResponseInterface|string
      * @throws SocketException
+     * @throws GuzzleException
      */
     public function put(string $uri, $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
@@ -264,6 +270,7 @@ class RestService
      * @param bool $returnResponseBodyOnly
      * @return PsrResponse|mixed|ResponseInterface|string
      * @throws Exception
+     * @throws GuzzleException
      */
     public function purge(string $uri, array $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
