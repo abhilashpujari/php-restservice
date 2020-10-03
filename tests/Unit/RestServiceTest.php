@@ -39,6 +39,7 @@ class RestServiceTest extends TestCase
         $restService->get('/posts');
     }
 
+
     public function testCanCreateGetRequest()
     {
         $mock = new MockHandler([
@@ -51,7 +52,7 @@ class RestServiceTest extends TestCase
         $response = $restService
             ->setEndpoint($this->endpoint)
             ->get('/posts', [], [], false);
-        
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Bar', $response->getHeader('X-Foo')[0]);
     }
@@ -142,6 +143,69 @@ class RestServiceTest extends TestCase
         $response = $restService
             ->setEndpoint($this->endpoint)
             ->purge('/posts', [], [], false);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('Bar', $response->getHeader('X-Foo')[0]);
+    }
+
+    public function testCanSetRequestHeader()
+    {
+        $mock = new MockHandler([
+            new Response(200, ['X-Foo' => 'Bar'])
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
+        $requestData = [
+            "id" => 1,
+            "value" => 'test'
+        ];
+
+        $response = $restService
+            ->setEndpoint($this->endpoint)
+            ->setRequestHeaders([
+                'auth-token' => '123'
+            ])
+            ->patch('/posts/1', $requestData, [], false);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testCanSetIsFireAndForgetRequest()
+    {
+        $mock = new MockHandler([
+            new Response(200, ['X-Foo' => 'Bar'])
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
+        $requestData = [
+            "id" => 1,
+            "value" => 'test'
+        ];
+
+        $response = $restService
+            ->setEndpoint($this->endpoint)
+            ->setIsFireAndForget(true, 200)
+            ->put('/posts/1', $requestData, [], false);
+
+        $this->assertTrue($response);
+    }
+
+    public function testCanCreateHeadRequest()
+    {
+        $mock = new MockHandler([
+            new Response(200, ['X-Foo' => 'Bar'])
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $restService = new RestService(['handler' => $handler]);
+        $response = $restService
+            ->setEndpoint($this->endpoint)
+            ->head('/posts', [], [], false);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Bar', $response->getHeader('X-Foo')[0]);

@@ -2,12 +2,12 @@
 
 namespace RestService\Exceptions;
 
-use ErrorException;
+use Exception;
 
 /**
  * Class SocketException
  * @package RestService\Exceptions
  */
-class SocketException extends ErrorException
+class SocketException extends Exception
 {
 }
