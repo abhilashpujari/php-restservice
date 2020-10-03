@@ -6,6 +6,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request as PsrRequest;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Response as PsrResponse;
@@ -57,6 +58,7 @@ class RestService
     protected $requestHeaders = [];
 
     /**
+     * RestService constructor.
      * @param array $options
      */
     public function __construct($options = [])
@@ -68,7 +70,7 @@ class RestService
     /**
      * @return array
      */
-    protected function getRequestHeaders()
+    protected function getRequestHeaders(): array
     {
         $headers = $this->requestHeaders;
 
@@ -81,20 +83,20 @@ class RestService
     }
 
     /**
-     * @param $requestHeaders
-     * @return RestService
+     * @param array $requestHeaders
+     * @return $this
      */
-    public function setRequestHeaders($requestHeaders)
+    public function setRequestHeaders(array $requestHeaders): RestService
     {
         $this->requestHeaders = $requestHeaders;
         return $this;
     }
 
     /**
-     * @param $endpoint
-     * @return RestService
+     * @param string $endpoint
+     * @return $this
      */
-    public function setEndpoint($endpoint)
+    public function setEndpoint(string $endpoint): RestService
     {
         $this->apiEndpoint = $endpoint;
         return $this;
@@ -105,7 +107,7 @@ class RestService
      * @param int $connectionTimeout
      * @return $this
      */
-    public function setIsFireAndForget($isFireAndForget = false, $connectionTimeout = 5)
+    public function setIsFireAndForget(bool $isFireAndForget = false, int $connectionTimeout = 5): RestService
     {
         $this->isFireAndForget = (bool)$isFireAndForget;
         $this->connectionTimeout = $connectionTimeout;
@@ -130,14 +132,14 @@ class RestService
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      * @param array $params
      * @param array $headers
-     * @param bool|true $returnResponseBodyOnly
-     * @return mixed|ResponseInterface
+     * @param bool $returnResponseBodyOnly
+     * @return PsrResponse|mixed|ResponseInterface|string
      * @throws Exception
      */
-    public function delete($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function delete(string $uri, array $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -149,14 +151,14 @@ class RestService
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      * @param array $params
      * @param array $headers
-     * @param bool|true $returnResponseBodyOnly
-     * @return mixed|ResponseInterface
+     * @param bool $returnResponseBodyOnly
+     * @return PsrResponse|mixed|ResponseInterface|string
      * @throws Exception
      */
-    public function get($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function get(string $uri, array $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -168,14 +170,14 @@ class RestService
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      * @param array $params
      * @param array $headers
-     * @param bool|true $returnResponseBodyOnly
-     * @return mixed|ResponseInterface
+     * @param bool $returnResponseBodyOnly
+     * @return PsrResponse|mixed|ResponseInterface|string
      * @throws Exception
      */
-    public function head($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function head(string $uri, array $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -187,15 +189,14 @@ class RestService
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      * @param array $params
      * @param array $headers
-     * @param bool|true $returnResponseBodyOnly
-     * @return bool|mixed|ResponseInterface
-     * @throws Exception
+     * @param bool $returnResponseBodyOnly
+     * @return bool|PsrResponse|mixed|ResponseInterface|string
      * @throws SocketException
      */
-    public function patch($uri, $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function patch(string $uri, $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -211,15 +212,14 @@ class RestService
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      * @param array $params
      * @param array $headers
-     * @param bool|true $returnResponseBodyOnly
-     * @return bool|mixed|ResponseInterface
-     * @throws Exception
+     * @param bool $returnResponseBodyOnly
+     * @return bool|PsrResponse|mixed|ResponseInterface|string
      * @throws SocketException
      */
-    public function post($uri, $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function post(string $uri, $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -235,15 +235,14 @@ class RestService
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      * @param array $params
      * @param array $headers
-     * @param bool|true $returnResponseBodyOnly
-     * @return bool|mixed|ResponseInterface
-     * @throws Exception
+     * @param bool $returnResponseBodyOnly
+     * @return bool|PsrResponse|mixed|ResponseInterface|string
      * @throws SocketException
      */
-    public function put($uri, $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function put(string $uri, $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -259,14 +258,14 @@ class RestService
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      * @param array $params
      * @param array $headers
-     * @param bool|true $returnResponseBodyOnly
-     * @return mixed|ResponseInterface
+     * @param bool $returnResponseBodyOnly
+     * @return PsrResponse|mixed|ResponseInterface|string
      * @throws Exception
      */
-    public function purge($uri, array $params = [], array $headers = [], $returnResponseBodyOnly = true)
+    public function purge(string $uri, array $params = [], array $headers = [], bool $returnResponseBodyOnly = true)
     {
         $uri = $this->apiEndpoint . $uri;
         $options = [
@@ -278,14 +277,14 @@ class RestService
     }
 
     /**
-     * @param $method
-     * @param $uri
+     * @param string $method
+     * @param string $uri
      * @param array $options
-     * @param bool|true $returnResponseBodyOnly
-     * @return mixed|ResponseInterface
-     * @throws Exception
+     * @param bool $returnResponseBodyOnly
+     * @return PsrResponse|mixed|string
+     * @throws GuzzleException
      */
-    protected function send($method, $uri, $options = [], $returnResponseBodyOnly = true)
+    protected function send(string $method, string $uri, array $options = [], bool $returnResponseBodyOnly = true)
     {
         if (is_null($this->apiEndpoint)) {
             throw new Exception("Invalid null endpoint");
@@ -306,13 +305,13 @@ class RestService
     }
 
     /**
-     * @param $method
-     * @param $uri
+     * @param string $method
+     * @param string $uri
      * @param array $options
      * @return bool
      * @throws SocketException
      */
-    protected function fire($method, $uri, array $options = [])
+    protected function fire(string $method, string $uri, array $options = []): bool
     {
         $uri = new Uri($uri);
 
@@ -345,11 +344,7 @@ class RestService
         return true;
     }
 
-    /**
-     *  reset request
-     * @return void
-     */
-    public function resetRequest()
+    public function resetRequest(): void
     {
         $this->accept = 'application/json';
         $this->apiEndpoint = null;
