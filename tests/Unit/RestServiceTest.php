@@ -210,4 +210,24 @@ class RestServiceTest extends UnitTestCase
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('Bar', $response->getHeader('X-Foo')[0]);
     }
+
+    public function testCanGetResponseBody()
+    {
+        $response = new Response(200, ['X-Foo' => 'Bar'], 'data');
+        $mock = new MockHandler([$response]);
+
+        $handler = HandlerStack::create($mock);
+        $restService = new RestService(['handler' => $handler]);
+        self::assertEquals('data', $restService->getResponseBody($response));
+    }
+
+    public function testCanGetResponseBodyWithApplicationJsonContentType()
+    {
+        $response = new Response(200, ['Content-type' => 'application/json'], json_encode(['data']));
+        $mock = new MockHandler([$response]);
+
+        $handler = HandlerStack::create($mock);
+        $restService = new RestService(['handler' => $handler]);
+        self::assertEquals(['data'], $restService->getResponseBody($response));
+    }
 }
