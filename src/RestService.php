@@ -7,9 +7,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request as PsrRequest;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Response as PsrResponse;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,7 +60,7 @@ class RestService
      * RestService constructor.
      * @param array $options
      */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         $this->guzzle = new Client($options);
         $this->resetRequest();
@@ -115,10 +114,10 @@ class RestService
     }
 
     /**
-     * @param PsrResponse $response
+     * @param Response $response
      * @return mixed|string
      */
-    public function getResponseBody(PsrResponse $response)
+    public function getResponseBody(Response $response)
     {
         if (!empty($response->getHeader('Content-Type')) && stristr($response->getHeader('Content-Type')[0],
                 'application/json')
@@ -127,6 +126,7 @@ class RestService
                 $response->getBody()
             );
         } else {
+
             return $response->getBody()->__toString();
         }
     }
@@ -136,7 +136,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool $returnResponseBodyOnly
-     * @return PsrResponse|mixed|ResponseInterface|string
+     * @return Response|mixed|ResponseInterface|string
      * @throws Exception
      * @throws GuzzleException
      */
@@ -156,7 +156,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool $returnResponseBodyOnly
-     * @return PsrResponse|mixed|ResponseInterface|string
+     * @return Response|mixed|ResponseInterface|string
      * @throws Exception
      * @throws GuzzleException
      */
@@ -176,7 +176,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool $returnResponseBodyOnly
-     * @return PsrResponse|mixed|ResponseInterface|string
+     * @return Response|mixed|ResponseInterface|string
      * @throws Exception
      * @throws GuzzleException
      */
@@ -196,7 +196,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool $returnResponseBodyOnly
-     * @return bool|PsrResponse|mixed|ResponseInterface|string
+     * @return bool|Response|mixed|ResponseInterface|string
      * @throws SocketException
      * @throws GuzzleException
      */
@@ -220,7 +220,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool $returnResponseBodyOnly
-     * @return bool|PsrResponse|mixed|ResponseInterface|string
+     * @return bool|Response|mixed|ResponseInterface|string
      * @throws SocketException
      * @throws GuzzleException
      */
@@ -244,7 +244,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool $returnResponseBodyOnly
-     * @return bool|PsrResponse|mixed|ResponseInterface|string
+     * @return bool|Response|mixed|ResponseInterface|string
      * @throws SocketException
      * @throws GuzzleException
      */
@@ -268,7 +268,7 @@ class RestService
      * @param array $params
      * @param array $headers
      * @param bool $returnResponseBodyOnly
-     * @return PsrResponse|mixed|ResponseInterface|string
+     * @return Response|mixed|ResponseInterface|string
      * @throws Exception
      * @throws GuzzleException
      */
@@ -288,7 +288,7 @@ class RestService
      * @param string $uri
      * @param array $options
      * @param bool $returnResponseBodyOnly
-     * @return PsrResponse|mixed|string
+     * @return Response|mixed|string
      * @throws GuzzleException
      * @throws Exception
      */
@@ -324,7 +324,7 @@ class RestService
         $uri = new Uri($uri);
 
         /** @var MessageInterface $socketRequest */
-        $socketRequest = new PsrRequest($method, $uri, $options['headers'], json_encode($options['json']));
+        $socketRequest = new Request($method, $uri, $options['headers'], json_encode($options['json']));
         $socketRequest = $socketRequest
             ->withAddedHeader('Content-Type', 'application/json; charset=utf-8')
             ->withAddedHeader('Content-Length', strlen($socketRequest->getBody()))

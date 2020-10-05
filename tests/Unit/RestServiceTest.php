@@ -1,17 +1,18 @@
 <?php
+
 namespace RestService\Tests\Unit;
 
+use Exception;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit\Framework\TestCase;
 use RestService\RestService;
 
 /**
  * Class RestServiceTest
  * @package RestService\Tests\Unit
  */
-class RestServiceTest extends TestCase
+class RestServiceTest extends UnitTestCase
 {
     /**
      * @var RestService
@@ -23,7 +24,7 @@ class RestServiceTest extends TestCase
      */
     protected $endpoint;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->endpoint = 'https://test.com';
     }
@@ -31,7 +32,7 @@ class RestServiceTest extends TestCase
     public function testNullEndpointThrowsException()
     {
         $this->expectExceptionMessage("Invalid null endpoint");
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $mock = new MockHandler();
         $handler = HandlerStack::create($mock);
 
@@ -53,8 +54,8 @@ class RestServiceTest extends TestCase
             ->setEndpoint($this->endpoint)
             ->get('/posts', [], [], false);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Bar', $response->getHeader('X-Foo')[0]);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('Bar', $response->getHeader('X-Foo')[0]);
     }
 
     public function testCanCreatePostRequest()
@@ -70,7 +71,7 @@ class RestServiceTest extends TestCase
             ->setEndpoint($this->endpoint)
             ->post('/posts', [], [], false);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testCanCreatePutRequest()
@@ -91,7 +92,7 @@ class RestServiceTest extends TestCase
             ->setEndpoint($this->endpoint)
             ->put('/posts/1', $requestData, [], false);
 
-        $this->assertEquals(201, $response->getStatusCode());
+        self::assertEquals(201, $response->getStatusCode());
     }
 
     public function testCanCreatePatchRequest()
@@ -112,7 +113,7 @@ class RestServiceTest extends TestCase
             ->setEndpoint($this->endpoint)
             ->patch('/posts/1', $requestData, [], false);
 
-        $this->assertEquals(201, $response->getStatusCode());
+        self::assertEquals(201, $response->getStatusCode());
     }
 
     public function testCanCreateDeleteRequest()
@@ -128,7 +129,7 @@ class RestServiceTest extends TestCase
             ->setEndpoint($this->endpoint)
             ->delete('/posts/1', [], [], false);
 
-        $this->assertEquals(204, $response->getStatusCode());
+        self::assertEquals(204, $response->getStatusCode());
     }
 
     public function testCanCreatePurgeRequest()
@@ -144,8 +145,8 @@ class RestServiceTest extends TestCase
             ->setEndpoint($this->endpoint)
             ->purge('/posts', [], [], false);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Bar', $response->getHeader('X-Foo')[0]);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('Bar', $response->getHeader('X-Foo')[0]);
     }
 
     public function testCanSetRequestHeader()
@@ -157,19 +158,18 @@ class RestServiceTest extends TestCase
         $handler = HandlerStack::create($mock);
 
         $restService = new RestService(['handler' => $handler]);
-        $requestData = [
-            "id" => 1,
-            "value" => 'test'
+        $requestHeaders = [
+            'auth-token' => '123'
         ];
 
-        $response = $restService
+        $restService
             ->setEndpoint($this->endpoint)
-            ->setRequestHeaders([
-                'auth-token' => '123'
-            ])
-            ->patch('/posts/1', $requestData, [], false);
+            ->setRequestHeaders($requestHeaders);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals([
+            'auth-token' => '123',
+            'Accept' => 'application/json'
+        ], $this->callMethod($restService, 'getRequestHeaders'));
     }
 
     public function testCanSetIsFireAndForgetRequest()
@@ -191,7 +191,7 @@ class RestServiceTest extends TestCase
             ->setIsFireAndForget(true, 200)
             ->put('/posts/1', $requestData, [], false);
 
-        $this->assertTrue($response);
+        self::assertTrue($response);
     }
 
     public function testCanCreateHeadRequest()
@@ -207,7 +207,7 @@ class RestServiceTest extends TestCase
             ->setEndpoint($this->endpoint)
             ->head('/posts', [], [], false);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Bar', $response->getHeader('X-Foo')[0]);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('Bar', $response->getHeader('X-Foo')[0]);
     }
 }
