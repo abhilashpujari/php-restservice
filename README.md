@@ -1,6 +1,6 @@
 PHP HTTP REST Client
 =======================
-![CI build](https://github.com/abhilashpujari/php-restservice/workflows/CI%20build/badge.svg?branch=master)
+![Lint Code Base](https://github.com/abhilashpujari/php-restservice/workflows/Lint%20Code%20Base/badge.svg?branch=super-linter)
 
 Simple PHP Client library that makes it easy to make REST API calls.
 It uses [Guzzle Client](http://docs.guzzlephp.org/en/stable/) as a dependencies
