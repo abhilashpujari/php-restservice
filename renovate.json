@@ -8,7 +8,8 @@
         "minor",
         "patch"
       ],
-      "automerge": true
+      "automerge": true,
+      "automergeType": "branch"
     }
   ],
   "timezone": "Asia/Kolkata",
