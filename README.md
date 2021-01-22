@@ -109,7 +109,7 @@ $restService
      ->post('/posts');
 ```
 
-8 Request in which we request the response data which includes status code, headers, body etc,
+8 Request in which we need the response data which includes status code, headers, body etc,
 which can be done by setting request method 4th parameter to false
 
 ```php
